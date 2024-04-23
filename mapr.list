@@ -1,0 +1,5 @@
+### /etc/apt/sources.list.d/mapr.list
+#deb https://package.ezmeral.hpe.com/releases/v7.6.1/ubuntu/ binary bionic
+#deb https://package.ezmeral.hpe.com/releases/MEP/MEP-9.2.1/ubuntu/ binary bionic
+deb http://10.1.1.4/mapr/v7.6.1/ubuntu/ binary bionic
+deb http://10.1.1.4/mapr/MEP/MEP-9.2.1/ubuntu/ binary bionic
