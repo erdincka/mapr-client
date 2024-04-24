@@ -7,12 +7,12 @@ networks:
 services:
   client:
     platform: linux/amd64
-    image: ezmeral/mapr-demo-client:latest
+    image: ezmeral/mapr-demo-client
     build: 
       context: ./
       dockerfile: ./Dockerfile
-    container_name: client
-    hostname: client
+    container_name: mapr-client
+    hostname: mapr-client
     environment:
       - MAPR_CLUSTER=df
       - MAPR_USER=mapr

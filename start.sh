@@ -1,29 +1,26 @@
 #!/usr/bin/env bash
 
+# enable ssh early on
+service ssh start
+
 set -euo pipefail
 
 echo "${MAPR_IP} ${MAPR_CLUSTER}" | tee -a /etc/hosts
 
 # curl --insecure --user ${MAPR_USER}:${MAPR_PASS} -T /opt/mapr/conf/ sftp://${MAPR_IP}/opt/mapr/conf/ssl_truststore
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore /opt/mapr/conf/
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.p12 /opt/mapr/conf/
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.pem /opt/mapr/conf/
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.conf /opt/mapr/conf/
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.jceks /opt/mapr/conf/
-echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_keystore-signed.pem /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.conf /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.jceks /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.pem /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.p12 /opt/mapr/conf/
-# scp -o 'StrictHostKeyChecking no' ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_keystore-signed.pem /opt/mapr/conf/
+echo y | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore /opt/mapr/conf/
+pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.p12 /opt/mapr/conf/
+pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.pem /opt/mapr/conf/
+pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.conf /opt/mapr/conf/
+pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/maprtrustcreds.jceks /opt/mapr/conf/
+pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_keystore-signed.pem /opt/mapr/conf/
 
 /opt/mapr/server/configure.sh -N "${MAPR_CLUSTER:-maprdemo.mapr.io}" -c -C "${MAPR_IP}":7222 -HS "${MAPR_IP}"
 echo "Client configured"
 
 echo -n "Logging into ${MAPR_CLUSTER}"
 while [ ! -f /tmp/maprticket_0 ] ; do
-  sleep 10
+  sleep 5
   echo -n .
   echo "${MAPR_PASS:-mapr}" | maprlogin password -user "${MAPR_USER:-mapr}" -cluster "${MAPR_CLUSTER:-maprdemo.mapr.io}"
 done
@@ -33,9 +30,6 @@ maprlogin generateticket -user "${MAPR_USER:-mapr}" -type service -out /opt/mapr
 service mapr-posix-client-basic start
 echo "posix client configured"
 
-
 cd /workspace
-# jupyter lab --allow-root --ip=0.0.0.0 --port=8887 --no-browser
 echo "Sleep forever..."
 while :; do :; done & kill -STOP $! && wait $!
-# java -cp $(mapr classpath):/app/ezshow-1.0-jar-with-dependencies.jar lab.kaya.Ezshow
