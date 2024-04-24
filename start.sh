@@ -30,6 +30,5 @@ maprlogin generateticket -user "${MAPR_USER:-mapr}" -type service -out /opt/mapr
 service mapr-posix-client-basic start
 echo "posix client configured"
 
-cd /workspace
 echo "Sleep forever..."
 while :; do :; done & kill -STOP $! && wait $!

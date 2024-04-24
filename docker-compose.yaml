@@ -1,13 +1,13 @@
 version: "3"
 
 networks:
-  lab:
+  mapr:
     internal: false
 
 services:
   client:
     platform: linux/amd64
-    image: ezmeral/mapr-demo-client
+    image: ezmeral/maprclient:latest
     build: 
       context: ./
       dockerfile: ./Dockerfile
@@ -15,14 +15,9 @@ services:
     hostname: mapr-client
     environment:
       - MAPR_CLUSTER=df
-      - MAPR_USER=mapr
-      - MAPR_PASS=mapr
       - MAPR_IP=10.1.1.31
     restart: unless-stopped
     networks:
-      - lab
-    
+      - mapr
     ports:
       - "2222:22"
-      - "9000:8080"
-

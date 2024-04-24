@@ -1,5 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:20.04
 
+LABEL org.opencontainers.image.authors="erdincka@msn.com"
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update
@@ -47,10 +49,5 @@ RUN pip3 install requests delta-spark==2.3.0 avro-python3==1.10.2
 ADD ./start.sh /start.sh
 RUN chmod +x /start.sh
 
-ADD ./app /workspace
-# Finalize client configuration
-WORKDIR /workspace
-EXPOSE 8080
-EXPOSE 8090
 EXPOSE 22
 ENTRYPOINT [ "/start.sh" ]
