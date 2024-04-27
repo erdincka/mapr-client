@@ -44,7 +44,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 RUN pip3 install pandas numpy wheel faker pyspark tqdm boto3
 RUN apt install -y mapr-spark
 RUN pip3 install requests delta-spark==2.3.0 avro-python3==1.10.2
-# RUN pip3 install jupyterlab
+RUN apt install -y git
 
 ADD ./start.sh /start.sh
 RUN chmod +x /start.sh
