@@ -5,7 +5,7 @@ service ssh start
 
 set -euo pipefail
 
-echo "${MAPR_IP} ${MAPR_CLUSTER}" | tee -a /etc/hosts
+# echo "${MAPR_IP} ${MAPR_CLUSTER}" | tee -a /etc/hosts
 
 # curl --insecure --user ${MAPR_USER}:${MAPR_PASS} -T /opt/mapr/conf/ sftp://${MAPR_IP}/opt/mapr/conf/ssl_truststore
 echo y | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore /opt/mapr/conf/
