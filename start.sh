@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# enable ssh early on
-service ssh start
-
-set -euo pipefail
-
-# echo "${MAPR_IP} ${MAPR_CLUSTER}" | tee -a /etc/hosts
-
-# curl --insecure --user ${MAPR_USER}:${MAPR_PASS} -T /opt/mapr/conf/ sftp://${MAPR_IP}/opt/mapr/conf/ssl_truststore
 echo n | pscp -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore /opt/mapr/conf/
 echo n | pscp -P 22 -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.p12 /opt/mapr/conf/
 echo n | pscp -P 22 -pw "${MAPR_PASS}" -r ${MAPR_USER}@${MAPR_IP}:/opt/mapr/conf/ssl_truststore.pem /opt/mapr/conf/
@@ -25,10 +17,14 @@ while [ ! -f /tmp/maprticket_0 ] ; do
   echo "${MAPR_PASS:-mapr}" | maprlogin password -user "${MAPR_USER:-mapr}" -cluster "${MAPR_CLUSTER:-maprdemo.mapr.io}"
 done
 
-maprlogin generateticket -user "${MAPR_USER:-mapr}" -type service -out /opt/mapr/conf/maprfuseticket -duration 30:0:0 -renewal 90:0:0
-[ -d /mapr ] || mkdir /mapr
-service mapr-posix-client-basic start
-echo "posix client configured"
+# Enable posix client
+# maprlogin generateticket -user "${MAPR_USER:-mapr}" -type service -out /opt/mapr/conf/maprfuseticket -duration 30:0:0 -renewal 90:0:0
+# [ -d /mapr ] || mkdir /mapr
+# service mapr-posix-client-basic start
+# echo "posix client configured"
+
+# enable ssh
+service ssh start
 
 echo "Sleep forever..."
 while :; do :; done & kill -STOP $! && wait $!
