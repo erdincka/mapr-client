@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:20.04
 
 LABEL org.opencontainers.image.authors="erdincka@msn.com"
 
@@ -31,9 +31,6 @@ RUN cat /tmp/maprgpg.key | apt-key add -
 # RUN echo /tmp/maprgpg.key | gpg --dearmor -o /usr/share/keyrings/mapr-archive.gpg
 RUN apt clean
 RUN apt update
-# MFS-18734
-RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
-RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 
 # Install the mapr packages
 RUN apt install -y mapr-core mapr-client mapr-posix-client-basic
@@ -44,11 +41,7 @@ RUN pip3 install maprdb-python-client
 ENV LD_LIBRARY_PATH=/opt/mapr/lib
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
-# ## Enable spark and delta lake
-RUN pip3 install pandas numpy wheel faker tqdm boto3
-RUN apt install -y mapr-spark
-RUN pip3 install requests delta-spark==2.3.0 avro-python3==1.10.2
-RUN apt install -y git
+RUN apt install -y mapr-spark git
 
 ADD ./start.sh /start.sh
 RUN chmod +x /start.sh
