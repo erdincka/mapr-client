@@ -27,6 +27,14 @@ RUN cat /tmp/maprgpg.key | apt-key add -
 RUN apt clean
 RUN apt update
 
+## Ensure user
+ENV MAPR_USER=mapr
+ENV MAPR_PASS=mapr
+RUN useradd -u 5000 -U -m -d /home/${MAPR_USER} -s /bin/bash -G sudo ${MAPR_USER}
+RUN echo "${MAPR_USER}:${MAPR_PASS}" | chpasswd
+RUN echo "root:${MAPR_PASS}" | chpasswd
+RUN echo "mapr ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/mapr
+
 # Install the mapr packages
 RUN apt install -y mapr-edf-clients
 
