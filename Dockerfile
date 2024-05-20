@@ -44,9 +44,6 @@ RUN pip3 install maprdb-python-client
 ENV LD_LIBRARY_PATH=/opt/mapr/lib
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
-RUN pip3 install importlib-resources nicegui protobuf==3.20.* requests
-EXPOSE 3000
-
 ADD ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
