@@ -13,7 +13,7 @@ ENV SHELL=/bin/bash \
     LANGUAGE=en_US.UTF-8
 RUN locale-gen $LC_ALL
 RUN apt install -y --no-install-recommends gnupg2 python3 python3-pip python3-dev \
-    libgcc1 openjdk-11-jdk openssh-client nfs-common build-essential \
+    libgcc1 openjdk-11-jdk openssh-client nfs-common build-essential netbase \
     lsb-core libcurl3-gnutls putty sudo git wget curl
 
 # Workaround for MFS-18734
@@ -28,11 +28,9 @@ RUN apt clean
 RUN apt update
 
 ## Ensure user
-ENV MAPR_USER=mapr
-ENV MAPR_PASS=mapr
-RUN useradd -u 5000 -U -m -d /home/${MAPR_USER} -s /bin/bash -G sudo ${MAPR_USER}
-RUN echo "${MAPR_USER}:${MAPR_PASS}" | chpasswd
-RUN echo "root:${MAPR_PASS}" | chpasswd
+RUN useradd -u 5000 -U -m -d /home/mapr -s /bin/bash -G sudo mapr
+RUN echo "mapr:mapr123" | chpasswd
+RUN echo "root:mapr123" | chpasswd
 RUN echo "mapr ALL=(ALL) NOPASSWD: ALL" | tee /etc/sudoers.d/mapr
 
 # Install the mapr packages
