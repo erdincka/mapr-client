@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:20.04
 
 LABEL org.opencontainers.image.authors="erdincka@msn.com"
 
@@ -12,13 +12,13 @@ ENV SHELL=/bin/bash \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8
 RUN locale-gen $LC_ALL
-RUN apt install -y --no-install-recommends gnupg2 python3-pip python3-dev \
+RUN apt install -y --no-install-recommends gnupg2 python3 python3-pip python3-dev \
     libgcc1 openjdk-11-jdk openssh-client nfs-common build-essential \
     lsb-core libcurl3-gnutls putty sudo git wget curl
 
 # Workaround for MFS-18734
-RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
-RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+# RUN wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+# RUN dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 
 # ## Enable mapr repository
 COPY ./mapr.list /etc/apt/sources.list.d/mapr.list
@@ -46,5 +46,9 @@ ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 ADD ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+# Environment for JWT auth mechanism
+ENV MAPR_JWT_TOKEN_LOCATION="/root/jwt_access"
+ENV MAPR_JWT_REFRESH_TOKEN_LOCATION="/root/jwt_refresh"
 
 ENTRYPOINT [ "/entrypoint.sh" ]
